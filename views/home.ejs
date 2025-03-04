@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Falcone Demo</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="/index.js"></script>
+</head>
+
+<body>
+    <div class="">
+        <h1 class="text-3xl font-bold">
+            Finding Falcone
+        </h1>
+        <div>
+            Select planets you want to search in
+        </div>
+
+        <div>
+            Destination 1
+            <select name="first-destination" id="firstDestination">
+                <option value="" disabled selected hidden>Select destination</option>
+                <% planets.map(key => { %> 
+                     <option value="<%= key.distance %>">
+                        <%= key.name %>
+                    </option> 
+                <% }) %>
+            </select>
+            
+            <div id="firstVehicle" hidden>
+                <% vehicles.map(key => { %>
+                    <input type="radio" id="v1-<%=key.name%>" name="first-vehicle" value="{<%=key.name%>, <%= key.max_distance %>}">
+                    <label for="v1-<%=key.name%>"><%=key.name%></label><br>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            Destination 2
+            <select name="second-destination" id="secondDestination">
+                <option value="" disabled selected hidden>Select destination</option>
+                <% planets.map(key => { %> 
+                    <option value=<%=key.name%>>
+                        <%=key.name%>
+                    </option> 
+                <% }) %>
+            </select>
+
+            <div hidden>
+                <% vehicles.map(key => { %>
+                    <input type="radio" id="v2-<%=key.name%>" name="second-vehicle" value="<%=key.name%>">
+                    <label for="v2-<%=key.name%>"><%=key.name%></label><br>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            Destination 3
+            <select name="third-destination" id="thirdDestination">
+                <option value="" disabled selected hidden>Select destination</option>
+                <% planets.map(key => { %> 
+                    <option value=<%=key.name%>>
+                        <%=key.name%>
+                    </option> 
+                <% }) %>
+            </select>
+
+            <div hidden>
+                <% vehicles.map(key => { %>
+                    <input type="radio" id="v3-<%=key.name%>" name="third-vehicle" value="<%=key.name%>">
+                    <label for="v3-<%=key.name%>"><%=key.name%></label><br>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            Destination 3
+            <select name="fourth-destination" id="fourthDestination">
+                <option value="" disabled selected hidden>Select destination</option>
+                <% planets.map(key => { %> 
+                    <option value=<%=key.name%>>
+                        <%=key.name%>
+                    </option> 
+                <% }) %>
+            </select>
+
+            <div hidden>
+                <% vehicles.map(key => { %>
+                    <input type="radio" id="v4-<%=key.name%>" name="fourth-vehicle" value="<%=key.name%>">
+                    <label for="v4-<%=key.name%>"><%=key.name%></label><br>
+                <% }) %>
+            </div>
+        </div>
+
+        <div id="timeTaken">
+            Time Taken: 0
+        </div>
+    </div>
+</body>
+
+</html>
