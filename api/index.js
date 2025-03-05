@@ -1,6 +1,6 @@
 import express from 'express';
-import __dirname, { joinPath } from './utils/path.js';
-import { router } from './routes/router.js';
+import __dirname, { joinPath } from '../utils/path.js';
+import { router } from '../routes/router.js';
 import nocache from 'nocache';
 
 const app = express();
