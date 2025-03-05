@@ -3,6 +3,7 @@
 ### Installation
 
 - Clone this repository `git clone https://github.com/Carl-Tabuso/finding-falcone.git`
+- Navigate `cd finding-falcone`
 - Run `npm install` to download some "few dependencies".
 
 ### Run Development Serer
