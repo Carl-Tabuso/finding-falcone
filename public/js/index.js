@@ -33,6 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     planets.forEach(select => select.addEventListener("change", () => updatePlanetsDropdown(planets)));
 
+    const selectedVehicles = {
+        first: null,
+        second: null,
+        third: null,
+        foruth: null,
+    }
+
     Object.entries(options).forEach(([key, data]) => {
         const destinations = data.destinations;
         if (destinations instanceof HTMLElement) {
@@ -46,12 +53,24 @@ document.addEventListener('DOMContentLoaded', () => {
         data.vehicles.forEach((radio) => {
             radio.addEventListener("click", (event) => {
                 if (event.target.type === "radio") {
-                    let [_, __, vehicleSpeed] = splitDashedString(event.target.value);
+                    const eventPayload = event.target.value;
+                    let [_, __, vehicleSpeed] = splitDashedString(eventPayload);
                     vehicleSpeed = parseInt(vehicleSpeed);
                     let vehicleDestinations = splitDashedString(data.destinations.value)[1];
                     vehicleDestinations = parseInt(vehicleDestinations);
+
+                    if (selectedVehicles[key] === eventPayload) return;
+
+                    if (selectedVehicles[key]) {
+                        let [_, __, prevVehicleSpeed] = splitDashedString(selectedVehicles[key]);
+                        prevVehicleSpeed = parseInt(prevVehicleSpeed);
+                        let prevTime = vehicleDestinations / prevVehicleSpeed;
+                        timeTaken -= prevTime;
+                    }
+
                     const increase = updateTimeTaken(vehicleSpeed, vehicleDestinations);
                     timeTaken += increase;
+                    selectedVehicles[key] = eventPayload;
                     timeTakenContainer.innerHTML = `Time Taken: ${timeTaken}`;
                     hiddenInput.value = timeTaken;
                 }

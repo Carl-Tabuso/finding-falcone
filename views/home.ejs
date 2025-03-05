@@ -40,7 +40,9 @@
                                         value="<%= `${key.name}-${key.max_distance}-${key.speed}-${key.total_no}` %>"
                                         class="focus:ring-blue-500 text-blue-600">
                                     <label for="<%= `v-${index}-${key.name}` %>"
-                                        class="text-gray-700"><%= `${key.name} (${key.total_no})` %></label>
+                                        class="text-gray-700"><%= key.name %>
+                                        <!-- <span id="totalNumber">(<%= key.total_no %>)</span> -->
+                                    </label>
                                 </div>
                             <% }) %>
                         </div>
@@ -53,7 +55,7 @@
                     Time Taken: 0
                 </div>
             </div>
-            
+
             <input type="hidden" id="hiddenTimeTaken" name="time-taken" value="0">
 
             <div class="flex justify-center mt-4">

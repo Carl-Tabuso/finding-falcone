@@ -40,7 +40,6 @@ export const find = async (req, res) => {
         }
     });
     const apiResponse = await apiService.findFalcone(apiRequestBody);
-    // console.log(apiResponse);
     await (unlink(tokenPath));
     res.status(200);
     res.render('result', { 

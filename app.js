@@ -1,5 +1,5 @@
 import express from 'express';
-import __dirname from './utils/path.js';
+import __dirname, { joinPath } from './utils/path.js';
 import { router } from './routes/router.js';
 import nocache from 'nocache';
 
@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', router);
 app.use(express.static(`${__dirname}/public`));
 app.set('view engine', 'ejs');
-app.set('views', `${__dirname}/views`);
+app.set('views', joinPath('views'));
 app.set('Cache-Control', 'no-store');
 
 app.use('*', (req, res) => {
