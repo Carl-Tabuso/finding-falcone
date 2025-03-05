@@ -1,47 +1,52 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import __dirname from '../utils/basePath.js';
+import { readFile, unlink } from 'node:fs/promises';
+import __dirname, { joinPath, makeDirectory, fetchFile } from '../utils/path.js';
 import { apiService } from '../services/apiService.js';
-import { existsSync, mkdirSync } from 'node:fs';
 
 export const index = async (req, res) => {
-    const dataPath = `${__dirname}/data`;
-    if (! existsSync(dataPath)) {
-        mkdirSync(dataPath);
-    }
+    const dataPath = joinPath('data');
+    makeDirectory(dataPath);
 
-    let vehicles;
-    let planets;
-    let token;
+    const [vehicles, planets, tokens] = await Promise.all([
+        fetchFile('data/vehicles.json', apiService.getVehicles),
+        fetchFile('data/planets.json', apiService.getPlanets),
+        fetchFile('data/token.json', apiService.getApiToken)
+    ]);
 
-    if (! existsSync(`${dataPath}/vehicles.json`)) {
-        const data = await apiService.getVehicles();
-        await writeFile(`${dataPath}/vehicles.json`, JSON.stringify(data, null, 2));
-    }
-    const vehicleContents = await readFile(`${dataPath}/vehicles.json`, 'utf-8');
-    vehicles = JSON.parse(vehicleContents);
-
-    if (! existsSync(`${dataPath}/planets.json`)) {
-        const data = await apiService.getPlanets();
-        await writeFile(`${dataPath}/planets.json`, JSON.stringify(data, null ,2));
-    }
-    const planetContents = await readFile(`${dataPath}/planets.json`, 'utf-8');
-    planets = JSON.parse(planetContents);
-
-    if (! existsSync(`${dataPath}/token.json`)) {
-        const data = await apiService.getApiToken();
-        await writeFile(`${dataPath}/token.json`, JSON.stringify(data, null, 2));
-    }
-    const tokenContents = await readFile(`${dataPath}/token.json`, 'utf-8');
-    token = JSON.parse(tokenContents);
-
+    res.status(200);
     res.render('home', {
-        vehicles: vehicles,
-        planets: planets,
+        vehicles: JSON.parse(vehicles),
+        planets: JSON.parse(planets),
     });
 }
 
-export const find = (req, res) => {
-    //
+export const find = async (req, res) => {
+    const tokenPath = joinPath('data/token.json');
+    const payload = req.body;
+    const tokenContents = await readFile(tokenPath, 'utf-8');
+    let apiRequestBody = {
+        "token": Object.values(JSON.parse(tokenContents))[0],
+        "planet_names": [],
+        "vehicle_names": [],
+    };
+
+    Object.keys(payload).forEach((key, index) => {
+        if (key.startsWith("planet")) {
+            const vehicleKey = key.replace("planet", "vehicle");
+            const [planet, vehicle] = [payload[key]?.split("-"), payload[vehicleKey]?.split("-")];
+            const [planetName, vehicleName] = [planet?.[0], vehicle?.[0]];
+
+            apiRequestBody["planet_names"].push(planetName);
+            apiRequestBody["vehicle_names"].push(vehicleName);
+        }
+    });
+    const apiResponse = await apiService.findFalcone(apiRequestBody);
+    // console.log(apiResponse);
+    await (unlink(tokenPath));
+    res.status(200);
+    res.render('result', { 
+        apiResponse: apiResponse, 
+        timeTaken: payload['time-taken'] 
+    });
 }
 
 export * as controller from './controller.js';
