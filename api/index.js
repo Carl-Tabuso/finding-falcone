@@ -9,12 +9,12 @@ const port = 3000;
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', router);
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(joinPath('public')));
 app.set('view engine', 'ejs');
 app.set('views', joinPath('views'));
 app.set('Cache-Control', 'no-store');
 
-app.use('*', (req, res) => {
+app.all('*', (req, res) => {
     res.status(404);
     res.send('404 - Not found, go away stupid!');
 });
