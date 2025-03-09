@@ -6,9 +6,13 @@
 - Navigate `cd finding-falcone`
 - Run `npm install` to download some "few dependencies".
 
-### Run Development Serer
+### Local Server
 
 - Run `npm run start` to start local dev server
-- Visit [localhost:3000/api](http://localhost:3000/api)
+- Visit [localhost:3000/api](http://localhost:3000/api) 
 
-> Built using Node and Express
+> [!NOTE]
+> - This uses local disk for storing token, planets, and vehicles in `.json`, since except for the token, the external api returns the same set of planets and vehicles.
+> - Hitting the `external_api_url/find` and returning a successful response will unlink/delete the `token.json`. Every `Start Again` will make a post request to the external api for a new token.
+
+> Built using Node.js and Express.js ...and spite :))))
