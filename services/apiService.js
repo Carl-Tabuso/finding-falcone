@@ -9,7 +9,7 @@ import axios from 'axios';
  * a try-catch and return false.
  */
 export const getApiToken = async () => {
-    return (await axios.post(API_URL.TOKEN, {}, {
+    return (await axios.post(API_URL.TOKEN, null, {
         headers: {
             "Accept": "application/json",
         }
@@ -25,12 +25,16 @@ export const getPlanets = async () => {
 }
 
 export const findFalcone = async (apiRequestBody) => {
-    return (await axios.post(API_URL.FIND, apiRequestBody, {
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-    })).data;
+    try {
+        return (await axios.post(API_URL.FIND, apiRequestBody, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        })).data;        
+    } catch (err) {
+        return err.response.data;
+    }
 }
 
 export * as apiService from './apiService.js';

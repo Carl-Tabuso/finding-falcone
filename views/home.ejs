@@ -9,6 +9,13 @@
 </head>
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+
+    <% if (error) { %>
+        <div class="fixed top-5 right-5 bg-red-500 text-white px-4 py-3 rounded-md shadow-lg">
+            <span id="toast-message"><%= error %></span>
+        </div>
+    <% } %>
+
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
             Finding Falcone

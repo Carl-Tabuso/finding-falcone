@@ -2,24 +2,24 @@ import { readFile, unlink } from 'node:fs/promises';
 import __dirname, { joinPath, makeDirectory, fetchFile } from '../utils/path.js';
 import { apiService } from '../services/apiService.js';
 
-export const index = async (req, res) => {
+export const index = async (req, res, next, err = null) => {
     const dataPath = joinPath('data');
     makeDirectory(dataPath);
 
-    const [vehicles, planets, tokens] = await Promise.all([
+    const [vehicles, planets] = await Promise.all([
         fetchFile('data/vehicles.json', apiService.getVehicles),
         fetchFile('data/planets.json', apiService.getPlanets),
         fetchFile('data/token.json', apiService.getApiToken)
     ]);
 
-    res.status(200);
-    res.render('home', {
+    res.status(200).render('home', {
         vehicles: JSON.parse(vehicles),
         planets: JSON.parse(planets),
+        error: err,
     });
 }
 
-export const find = async (req, res) => {
+export const find = async (req, res, next) => {
     const tokenPath = joinPath('data/token.json');
     const payload = req.body;
     const tokenContents = await readFile(tokenPath, 'utf-8');
@@ -40,9 +40,12 @@ export const find = async (req, res) => {
         }
     });
     const apiResponse = await apiService.findFalcone(apiRequestBody);
+    if (apiResponse.hasOwnProperty("error")) {
+        return index(req, res, next, apiResponse.error);
+    }
+
     await (unlink(tokenPath));
-    res.status(200);
-    res.render('result', { 
+    res.status(201).render('result', { 
         apiResponse: apiResponse, 
         timeTaken: payload['time-taken'] 
     });
